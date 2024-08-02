@@ -18,11 +18,11 @@ function InterestTag({ text, onRemove }) {
 function InterestCard({ text, onClick, showIcon = true }) {
     return (
         <div 
-            className="inline-flex items-center bg-indigo-600 text-white rounded-full px-3 py-1 cursor-pointer hover:bg-indigo-800 transition-colors duration-200 m-1"
+            className="inline-flex items-center bg-gray-500 text-gray-100 rounded-full px-3 py-1 cursor-pointer hover:bg-indigo-800 transition-colors duration-200 m-1"
             onClick={() => onClick(text)}
         >
             {showIcon && <Plus size={16} className="mr-1" />}
-            <span className="text-base font-medium">{text}</span>
+            <span className="text-base font-light">{text}</span>
         </div>
     );
 }
@@ -74,7 +74,7 @@ export default function Interest() {
                     <h1 className="text-8xl font-extrabold">What are you interested in?</h1>
                 </div>
 
-                <form onSubmit={handleSearch} className="w-full max-w-2xl mx-auto mb-8">
+                <form onSubmit={handleSearch} className="w-full max-w-4xl mx-auto mb-8">
                     <div className="relative bg-white border border-gray-300 rounded-full p-2 flex flex-wrap items-center">
                         {selectedInterests.map((interest, index) => (
                             <InterestTag key={index} text={interest} onRemove={handleRemoveInterest} />
