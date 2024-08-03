@@ -65,7 +65,7 @@ export default function Interest() {
     return (
         <div className="h-screen flex flex-col justify-between items-center mx-2">
             <div className="flex justify-start w-full mb-20">
-                <img src={unimateLogo} alt="Unimate Logo" className="w-32 h-auto" />
+                <img src={unimateLogo} alt="Unimate Logo" className="w-28 h-auto" />
             </div>
 
             <div className="text-center mb-6">
