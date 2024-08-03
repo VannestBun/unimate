@@ -2,6 +2,10 @@ import React, { useState } from 'react';
 import { Search, Plus, X } from 'lucide-react';
 import unimateLogo from '../assets/Unimate.png';
 import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+
+import useAuthStore from '../context/authStore';
+import { SERVER_URL } from "../constants/server";
 
 function InterestTag({ text, onRemove }) {
     return (
@@ -27,6 +31,11 @@ function InterestCard({ text, onClick, showIcon = true }) {
 }
 
 export default function Interest() {
+    const navigate = useNavigate();
+    const { email } = useAuthStore((state) => ({
+        email: state.email,
+    }));
+
     const [selectedInterests, setSelectedInterests] = useState([]);
     const [inputValue, setInputValue] = useState('');
     const availableInterests = [
@@ -60,6 +69,49 @@ export default function Interest() {
     const handleSearch = (e) => {
         e.preventDefault();
         console.log('Searching for:', selectedInterests);
+    };
+
+    const handleLetsGoNext = async () => {
+        try {
+            const name = email.split("@")[0]
+    
+            // Call API
+            console.log('Sending request to:', `${SERVER_URL}/v1/account/register`);
+            console.log('Request body:', {
+                student_email: email,
+                interests: selectedInterests,
+                name: name,
+                major: "Computer Science",
+                cohort_year: 2022,
+                graduation_year: 2026,
+            });
+
+            const res = await fetch(`${SERVER_URL}/v1/account/register`, {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    student_email: email,
+                    interests: selectedInterests,
+                    name: name,
+                    major: "Computer Science",
+                    cohort_year: 2022,
+                    graduation_year: 2026,
+                })
+            });
+    
+            if (res.ok) {
+                console.log('API call successful');
+                navigate("/dashboard");
+            } else {
+                console.error('API call failed:', await res.text());
+                // Handle error (e.g., show an error message to the user)
+            }
+        } catch (error) {
+            console.error('Error in handleLetsGoNext:', error);
+            // Handle error (e.g., show an error message to the user)
+        }
     };
 
     return (
@@ -117,8 +169,9 @@ export default function Interest() {
 
                 <div 
                     className="inline-flex items-center bg-indigo-600 text-white rounded-full px-8 py-3 cursor-pointer hover:bg-indigo-800 transition-colors duration-200 m-1 ml-5"
+                    onClick={handleLetsGoNext}
                 >
-                    <Link to="/dashboard" className='font-base font-bold'> Let's Get Started →</Link>
+                    Let's Get Started →
                 </div>
             </div>
         </div>
