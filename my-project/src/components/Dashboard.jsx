@@ -220,31 +220,6 @@ export default function Dashboard() {
                             <>
                             </>
                         )}
-                        
-                        {/* <DashboardCard
-                            profilePic={john}
-                            backgroundImage={movie}
-                            name="Movie Night"
-                            description="Join us for a night of fun and entertainment."
-                            link="/eventDetail"
-                            buttonContent="🎥 Join Movie Night"
-                        />
-                        <DashboardCard
-                            profilePic={james}
-                            backgroundImage={founderHack}
-                            name="Founders Hackathon"
-                            description="Collaborate and innovate with fellow founders."
-                            link="/eventDetail"
-                            buttonContent="💡 Join Hackathon"
-                        />
-                        <DashboardCard
-                            profilePic={peter}
-                            backgroundImage={orchestra}
-                            name="Orchestra"
-                            description="Experience the best classical orchestra."
-                            link="/eventDetail"
-                            buttonContent="Join Orchestra"
-                        /> */}
                 </div>
             </div>
         </>
