@@ -89,10 +89,10 @@ export default function Dashboard() {
                             <Link to="/">Home</Link>
                         </li>
                         <li>
-                            <Link to="/interest">Your Friends</Link>
+                            <Link to="/friendChat">Your Friends</Link>
                         </li>
                         <li>
-                            <Link to="/events">Your Events</Link>
+                            <Link to="/Dashboard">Your Events</Link>
                         </li>
                     </ul>
                     <Search size={35} className="text-white bg-indigo-700 rounded-full p-2" />

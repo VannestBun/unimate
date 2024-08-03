@@ -5,6 +5,7 @@ import Dashboard from './components/Dashboard';
 import AllEvents from './components/AllEvents'
 import EventDetail from './components/EventDetail'
 import Login from './components/LogIn'
+import FriendChat from './components/FriendChat'
 
 function App() {
   return (
@@ -25,6 +26,7 @@ function App() {
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/allEvents" element={<AllEvents />} />
         <Route path="/eventDetail" element={<EventDetail />} />
+        <Route path="/friendChat" element={<FriendChat />} />
       </Routes>
     </>
   );
