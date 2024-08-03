@@ -1,56 +1,69 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import unimateLogo from '../assets/Unimate.png';
-import login from '../assets/login.png';
-import { Mail } from 'lucide-react';
+import ssoImage from '../assets/ssoLoginImagery.png';
+import mailIcon from '../assets/iconMail.png'
 
-export default function LogIn() {
-    return (
-        <div className="min-h-screen flex flex-col">
-            <header className="bg-white">
-                <div className="max-w-7xl mx-auto px-4 py-4 sm:px-6 lg:px-8">
-                    <img src={unimateLogo} alt="Unimate Logo" className="w-32 h-auto" />
-                </div>
-            </header>
+export default function Login() {
+  return (
+    <div className="h-screen flex flex-col mx-2 overflow-hidden">
+      {/* Logo Section */}
+      <div className="flex justify-start w-full p-4">
+        <img src={unimateLogo} alt="Unimate Logo" className="w-28 h-auto" />
+      </div>
 
-            <main className="flex-grow flex items-center justify-center px-4 sm:px-6 lg:px-8">
-                <div className="max-w-5xl w-full space-y-8 flex items-center gap-20">
+      {/* Content Section */}
+      <div className="flex w-full h-full">
+        {/* Text Section */}
+        <div className="flex-[3] flex items-center justify-center">
+          <div className="text-left flex flex-col gap-4 px-8">
+            <h1 className="text-5xl font-black tracking-tight leading-tighter">
+              Start Your <span className="text-purpleMain">Unforgettable</span> <br />
+              First Year with UniMate.
+            </h1>
+            <p className="text-lg tracking-tight">
+              Connect with peers, discover exciting events & <br/>embrace all that campus life has to offer. <br />
+              All in one site.
+            </p>
 
-                    <div className="w-1/2 space-y-6">
-                        <h1 className="text-4xl font-bold text-gray-900 leading-tight">
-                            Start Your <strong className='text-indigo-600 '>Unforgettable</strong> First Year with UniMate.
-                        </h1>
-                        <p className="text-xl text-gray-600">
-                            Connect with peers, discover exciting events, and embrace all that campus life has to offer. 
-                            All in one site.
-                        </p>
-                        <div className="bg-white p-8 rounded-lg space-y-4">
-                            <h2 className="text-2xl font-semibold text-gray-900">Log In with SSO</h2>
-                            <div className="relative">
-                                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                    <Mail className="h-5 w-5 text-gray-400" />
-                                </div>
-                                <input
-                                    type="email"
-                                    className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                                    placeholder="johndoe@student.rmit.edu.au"
-                                />
-                            </div>
-                            <a href='/interest' className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                                Let's go!
-                            </a>
-                            <p className="text-sm text-center text-gray-500">
-                                <a href="#" className="font-medium text-indigo-600 hover:text-indigo-500">
-                                    I don't know my student email
-                                </a>
-                            </p>
-                        </div>
-                    </div>
+            <h2 className="text-xl font-bold tracking-tight mt-6">
+              Log In with SSO
+            </h2>
 
-                    <div className="w-1/2 pr-8">
-                        <img src={login} alt="Login" className="w-full h-auto object-cover rounded-lg" />
-                    </div>
-                </div>
-            </main>
+            {/* SSO Login Section */}
+            <div className="flex items-center bg-gray-100 rounded-full p-2 h-12">
+                <img
+                    src={mailIcon}
+                    alt="Enter Email"
+                    className='h-6 w-6 ml-3'
+                />
+                <input
+                    type="email"
+                    className="flex-grow bg-transparent text-gray-600 placeholder-gray-900 ml-3 focus:outline-none"
+                    placeholder="johndoe@student.rmit.edu.au"
+                />
+                <Link to="/interest">
+                    <button className="ml-auto bg-indigo-600 text-white font-bold py-2 px-6 rounded-full">
+                    Let’s Go!
+                    </button>
+                </Link>
+            </div>
+
+            <div className=" text-sm text-gray-500 hover:text-gray-700 underline mb-28">
+              I don’t know my student email
+            </div>
+          </div>
         </div>
-    );
+
+        {/* Image Section */}
+        <div className="flex-[2]">
+          <img
+            src={ssoImage}
+            alt="UniMate Experience"
+            className="object-cover w-full h-full overflow-visible"
+          />
+        </div>
+      </div>
+    </div>
+  );
 }

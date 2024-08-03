@@ -5,7 +5,6 @@ import Interest from './components/Interest';
 import Dashboard from './components/Dashboard';
 import AllEvents from './components/AllEvents'
 import EventDetail from './components/EventDetail'
-import Login from './components/LogIn'
 import FriendChat from './components/FriendChat'
 
 function App() {
