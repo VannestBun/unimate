@@ -37,6 +37,7 @@ function SearchInput() {
 export default function Dashboard() {
     const sliderRef = useRef(null);
     const [usersList, setUsersList] = useState([]);
+    const [eventsList, setEventsList] = useState([]);
 
     useEffect(() => {
         const fetchUsers = async () => {
@@ -49,15 +50,33 @@ export default function Dashboard() {
               throw new Error("Failed to fetch users");
             }
       
-            const data = (await res.json()).data;
-            setUsersList(data.users);
-            console.log(data.users);
+            const users = (await res.json()).data.users;
+            setUsersList(users);
           } catch (err) {
             console.error("Error fetching all users:", err);
           }
         };
+
+        const fetchAllEvents = async () => {
+            try {
+                const response = await fetch(`${SERVER_URL}/v1/event`, {
+                    method: 'GET',
+                });
+        
+                if (!response.ok) {
+                    throw new Error('Failed to fetch events');
+                }
+        
+                const events = (await response.json()).data.events;
+                setEventsList(events)
+            } catch (error) {
+                console.error('Error fetching events:', error);
+                return [];
+            }
+        };
       
         fetchUsers();
+        fetchAllEvents();
       }, []);
 
     const settings = {
@@ -175,31 +194,58 @@ export default function Dashboard() {
                 </div>
 
                 <div className='flex gap-3 mt-8 justify-center'>
-                <DashboardCard
-                    profilePic={john}
-                    backgroundImage={movie}
-                    name="Movie Night"
-                    description="Join us for a night of fun and entertainment."
-                    link="/eventDetail"
-                    buttonContent="🎥 Join Movie Night"
-                />
-                <DashboardCard
-                    profilePic={james}
-                    backgroundImage={founderHack}
-                    name="Founders Hackathon"
-                    description="Collaborate and innovate with fellow founders."
-                    link="/eventDetail"
-                    buttonContent="💡 Join Hackathon"
-                />
-                <DashboardCard
-                    profilePic={peter}
-                    backgroundImage={orchestra}
-                    name="Orchestra"
-                    description="Experience the best classical orchestra."
-                    link="/eventDetail"
-                    buttonContent="Join Orchestra"
-                />
-            </div>
+                    {eventsList.length > 0 ? (
+                            eventsList.map((event, index) => (
+                                <div
+                                    key={index}
+                                    className='px-2'
+                                >
+                                    <DashboardCard
+                                        profilePic={
+                                            index % 3 == 0 ? john : 
+                                            index % 3 == 1 ? james : peter
+                                    }
+                                        backgroundImage={
+                                            index % 3 == 0 ? movie : 
+                                            index % 3 == 1 ? founderHack : orchestra
+                                        }
+                                        name={event.name}
+                                        description={`${event.description}`}
+                                        link="/eventDetail"
+                                        buttonContent="Join"
+                                    />
+                                </div>
+                            ))
+                        ) : (
+                            <>
+                            </>
+                        )}
+                        
+                        {/* <DashboardCard
+                            profilePic={john}
+                            backgroundImage={movie}
+                            name="Movie Night"
+                            description="Join us for a night of fun and entertainment."
+                            link="/eventDetail"
+                            buttonContent="🎥 Join Movie Night"
+                        />
+                        <DashboardCard
+                            profilePic={james}
+                            backgroundImage={founderHack}
+                            name="Founders Hackathon"
+                            description="Collaborate and innovate with fellow founders."
+                            link="/eventDetail"
+                            buttonContent="💡 Join Hackathon"
+                        />
+                        <DashboardCard
+                            profilePic={peter}
+                            backgroundImage={orchestra}
+                            name="Orchestra"
+                            description="Experience the best classical orchestra."
+                            link="/eventDetail"
+                            buttonContent="Join Orchestra"
+                        /> */}
+                </div>
             </div>
         </>
     );
