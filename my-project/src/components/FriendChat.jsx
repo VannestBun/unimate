@@ -42,8 +42,6 @@ export default function FriendChat() {
 
                 let friendList = (await res.json()).data.friends;
 
-                console.log("friends", friendList);
-                
                 friendList = friendList.map((friend, index) => {
                     return {
                         ...friend,
@@ -54,6 +52,7 @@ export default function FriendChat() {
                 });
 
                 setFriends(friendList);
+                setSelectedFriend(friendList[0]);
             } catch (err) {
                 console.error("Error fetching all friends:", err);
             }
@@ -93,7 +92,10 @@ export default function FriendChat() {
                         <div 
                             key={friend.id} 
                             className={`flex items-center p-4 cursor-pointer hover:bg-gray-200 ${selectedFriend.id === friend.id ? 'bg-gray-200' : ''}`}
-                            onClick={() => setSelectedFriend(friend)}
+                            onClick={() => {
+                                console.log("select friend", friend);
+                                setSelectedFriend(friend);
+                            }}
                         >
                             <img src={index % 3  == 0 ? john : index % 3 == 1 ? james : peter} alt={friend.name} className="w-12 h-12 rounded-full mr-4" />
                             <div>

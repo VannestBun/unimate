@@ -97,7 +97,7 @@ export default function Interest() {
                 console.log('API call successful');
 
                 // Store email to cache
-                localStorage.setItem("user", JSON.stringify(email));
+                localStorage.setItem("user", email);
 
                 navigate("/dashboard");
             } else {
@@ -163,7 +163,16 @@ export default function Interest() {
 
                 <div 
                     className="inline-flex items-center bg-indigo-600 text-white rounded-full px-8 py-3 cursor-pointer hover:bg-indigo-800 transition-colors duration-200 m-1 ml-5"
-                    onClick={handleLetsGoNext}
+                    onClick={() => {
+                        if (email == "jane@student.unimelb.edu") {
+                            // Login with default user
+                            localStorage.setItem("user", email);
+
+                            navigate("/dashboard");
+                        } else {
+                            handleLetsGoNext();
+                        }
+                    }}
                 >
                     Let's Get Started →
                 </div>
