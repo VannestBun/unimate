@@ -1,19 +1,31 @@
-import React from 'react';
+import React, { useRef, useEffect } from 'react';
 import unimateLogo from '../assets/Unimate.png';
+import tagAnime from '../assets/tagAnime.png';
+import tagArchitecture from '../assets/tagArchitecture.png';
+import tagFootball from '../assets/tagFootball.png';
 import sparkle from '../assets/sparkle.png';
 import menu from '../assets/Menu.png';
 import guy from '../assets/guy.png';
+import john from '../assets/john.png';
+import james from '../assets/james.png';
+import peter from '../assets/peter.png';
+import movie from '../assets/eventMovie.png';
+import founderHack from '../assets/eventFoundersHack.png';
+import orchestra from '../assets/eventOrchestra.png';
 import { Link } from 'react-router-dom';
 import { Search } from 'lucide-react';
 import DashboardCard from './DashboardCard';
+import Slider from 'react-slick';
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 
 function SearchInput() {
     return (
-        <div className="flex items-center border border-gray-300 rounded-full px-4 py-2 bg-white">
-            <Search size={20} className="text-gray-600 mr-2" />
+        <div className="flex items-center rounded-full px-4 py-2 bg-gray-100 ">
+            <Search size={20} className="text-gray-700 mr-2" />
             <input
                 type="text"
-                placeholder="describe your ideal friend"
+                placeholder="Describe your ideal friend ..."
                 className="flex-grow bg-transparent focus:outline-none text-gray-700 min-w-[250px]"
             />
         </div>
@@ -21,6 +33,52 @@ function SearchInput() {
 }
 
 export default function Dashboard() {
+    const sliderRef = useRef(null);
+
+    const settings = {
+        dots: true,
+        infinite: true,
+        speed: 500,
+        slidesToShow: 3,
+        slidesToScroll: 1,
+        responsive: [
+            {
+                breakpoint: 1024,
+                settings: {
+                    slidesToShow: 2,
+                    slidesToScroll: 1,
+                    infinite: true,
+                    dots: true
+                }
+            },
+            {
+                breakpoint: 600,
+                settings: {
+                    slidesToShow: 1,
+                    slidesToScroll: 1
+                }
+            }
+        ]
+    };
+
+    const handleScroll = (event) => {
+        if (sliderRef.current) {
+            const scrollDirection = event.deltaY > 0 ? 'next' : 'prev';
+            if (scrollDirection === 'next') {
+                sliderRef.current.slickNext();
+            } else {
+                sliderRef.current.slickPrev();
+            }
+        }
+    };
+
+    useEffect(() => {
+        window.addEventListener('wheel', handleScroll);
+        return () => {
+            window.removeEventListener('wheel', handleScroll);
+        };
+    }, []);
+
     return (
         <>
             <div className="flex items-center justify-between mx-3 my-5">
@@ -45,21 +103,67 @@ export default function Dashboard() {
                 </div>
             </div>
 
-            <div className='flex justify-between mx-10 my-10 items-center'>
+            <div className='flex justify-between mx-10 mt-10 items-center'>
                 <div className='flex items-center'>
-                    <h1 className="text-2xl font-semibold mr-2">Friends for you</h1>
+                    <h1 className="text-5xl font-semibold mr-2">Friends for you</h1>
                     <img src={sparkle} alt="sparkle" className="w-10 h-auto" />
                 </div>
                 <SearchInput />
             </div>
 
             <div className="p-10">
-            <DashboardCard
-                backgroundImage={unimateLogo}
-                name="John Doe"
-                description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
-            />
-        </div>
+                <Slider {...settings} ref={sliderRef}>
+                    <DashboardCard
+                        profilePic={john}
+                        backgroundImage={tagAnime}
+                        name="John Doe"
+                        description="I like food"
+                    />
+                    <DashboardCard
+                        profilePic={james}
+                        backgroundImage={tagFootball}
+                        name="John Doe"
+                        description="I like food"
+                    />
+                    <DashboardCard
+                        profilePic={peter}
+                        backgroundImage={tagArchitecture}
+                        name="John Doe"
+                        description="I like food"
+                    />
+                </Slider>
+
+                <div className='flex items-center mt-10 justify-between'>
+                    <div className='flex items-center'>
+                        <h1 className="text-5xl font-semibold mr-2">Upcoming Events for you</h1>
+                        <img src={sparkle} alt="sparkle" className="w-10 h-auto" />
+                    </div>
+                <div>
+                        <Link to="/allEvents" className='bg-indigo-600 text-white py-4 px-8 rounded-full'>See All</Link>
+                    </div>
+                </div>
+                <div className='flex gap-3 mt-8'>
+                <DashboardCard
+                        profilePic={peter}
+                        backgroundImage={movie}
+                        name="John Doe"
+                        description="I like food"
+                    />
+                <DashboardCard
+                        profilePic={peter}
+                        backgroundImage={founderHack}
+                        name="John Doe"
+                        description="I like food"
+                    />
+                <DashboardCard
+                        profilePic={peter}
+                        backgroundImage={orchestra}
+                        name="John Doe"
+                        description="I like food"
+                    />
+                </div>
+            </div>
+
         </>
     );
 }
