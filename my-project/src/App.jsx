@@ -4,6 +4,7 @@ import Interest from './components/Interest';
 import Dashboard from './components/Dashboard';
 import AllEvents from './components/AllEvents'
 import EventDetail from './components/EventDetail'
+import Login from './components/LogIn'
 
 function App() {
   return (
@@ -19,7 +20,8 @@ function App() {
         </ul>
       </nav> */}
       <Routes>
-        <Route path="/" element={<Interest />} />
+        <Route path="/" element={<Login />} />
+        <Route path="/interest" element={<Interest />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/allEvents" element={<AllEvents />} />
         <Route path="/eventDetail" element={<EventDetail />} />
