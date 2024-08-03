@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import unimateLogo from '../assets/Unimate.png';
 import menu from '../assets/Menu.png';
 import guy from '../assets/guy.png';
@@ -17,13 +17,21 @@ const friends = [
 export default function FriendChat() {
     const [selectedFriend, setSelectedFriend] = useState(friends[0]);
     const [message, setMessage] = useState('');
+    const [messagesList, setMessagesList] = useState([]);
 
     const handleSendMessage = (e) => {
         e.preventDefault();
         // Here you would typically send the message to your backend
         console.log('Sending message:', message);
+        
+        setMessagesList(prev => [...prev, message]);
+        
         setMessage('');
     };
+
+    useEffect(() => {
+
+    }, messagesList)
 
     return(
         <div className="flex flex-col h-screen">
@@ -84,6 +92,23 @@ export default function FriendChat() {
                         <div className="mb-4 text-right">
                             <p className="bg-indigo-500 text-white rounded-lg p-2 inline-block">I'm good, thanks! How about you?</p>
                         </div>
+                        {messagesList.length > 0 ? (
+                            messagesList.map((message, index) => (
+                                <div
+                                    key={index}
+                                    className={`mb-4 ${index % 2 == 0 ? 'text-left' : 'text-right'}`}
+                                >
+                                    <p 
+                                        className={`${index % 2 == 0 ? "bg-gray-200 rounded-lg p-2 inline-block" : "bg-indigo-500 text-white rounded-lg p-2 inline-block"}`}
+                                    >
+                                        {message}
+                                    </p>
+                                </div>
+                            ))
+                        ) : (
+                            <>
+                            </>
+                        )}
                     </div>
 
                     {/* Message Input */}
