@@ -112,13 +112,13 @@ export default function Interest() {
                 <div 
                     className="inline-flex items-center bg-gray-100 text-gray-400 rounded-full px-14 py-3 cursor-pointer hover:bg-indigo-800 transition-colors duration-200 m-1 mr-5"
                 >
-                    <Link to="/" className='text-lg font-base'> ← Back</Link>
+                    <Link to="/" className='font-base font-bold'> ← Back</Link>
                 </div>
 
                 <div 
                     className="inline-flex items-center bg-indigo-600 text-white rounded-full px-8 py-3 cursor-pointer hover:bg-indigo-800 transition-colors duration-200 m-1 ml-5"
                 >
-                    <Link to="/dashboard" className='text-lg font-base'> Let's Get Started →</Link>
+                    <Link to="/dashboard" className='font-base font-bold'> Let's Get Started →</Link>
                 </div>
             </div>
         </div>
