@@ -15,6 +15,9 @@ export default {
       width: {
         '96': '96%',
       },
+      lineHeight: {
+        tighter: 1.1,
+      }
     },
   },
   plugins: [],

@@ -102,7 +102,7 @@ export default function Interest() {
             </div>
 
             <div className='text-center mt-2'>
-                <h1 className='text-gray-400 text-body'>{selectedInterests.length}/5 selected</h1>
+                <h1 className='text-gray-400 sub-body'>{selectedInterests.length}/5 selected</h1>
                 {selectedInterests.length >= 5 && (
                     <p className='text-red-600'>You may only choose 5 interests.</p>
                 )}

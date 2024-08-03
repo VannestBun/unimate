@@ -15,16 +15,28 @@ body {
   letter-spacing: -0.055em;
 }
 
+.sub-heading1{
+  font-size: 4vw; 
+  font-weight: 600;
+  letter-spacing: -0.055em;
+  line-height: 1.2em;
+}
+
+.text-body{
+  font-size: 1.7vw; 
+  letter-spacing: -0.03em;
+  font-weight: 300;
+  line-height: 1.4em;
+}
+
 .text-base{
   font-size: 1.4vw; 
-  font-family: 'Manrope';
   letter-spacing: -0.03em;
   font-weight: 300;
 }
 
-.text-body{
+.sub-body{
   font-size: 1.2vw; 
-  font-family: 'Manrope';
   letter-spacing: -0.03em;
   font-weight: 300;
 }
