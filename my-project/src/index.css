@@ -1,9 +1,42 @@
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;700&display=swap');
-
 body {
   font-family: 'Manrope', sans-serif;
+}
+
+.main-heading{
+  font-size: 6vw; 
+  font-family: 'Manrope';
+  font-weight: 900;
+  letter-spacing: -0.055em;
+}
+
+.sub-heading1{
+  font-size: 4vw; 
+  font-weight: 600;
+  letter-spacing: -0.055em;
+  line-height: 1.2em;
+}
+
+.text-body{
+  font-size: 1.7vw; 
+  letter-spacing: -0.03em;
+  font-weight: 300;
+  line-height: 1.4em;
+}
+
+.text-base{
+  font-size: 1.4vw; 
+  letter-spacing: -0.03em;
+  font-weight: 300;
+}
+
+.sub-body{
+  font-size: 1.2vw; 
+  letter-spacing: -0.03em;
+  font-weight: 300;
 }
