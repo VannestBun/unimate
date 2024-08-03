@@ -164,25 +164,6 @@ export default function Dashboard() {
                         <>
                         </>
                     )}
-                    <div className="px-2">
-                        
-                    </div>
-                    <div className="px-2">
-                        <DashboardCard
-                            profilePic={james}
-                            backgroundImage={tagFootball}
-                            name="John Doe"
-                            description="I like food"
-                        />
-                    </div>
-                    <div className="px-2">
-                        <DashboardCard
-                            profilePic={peter}
-                            backgroundImage={tagArchitecture}
-                            name="John Doe"
-                            description="I like food"
-                        />
-                    </div>
                 </Slider>
 
                 <div className='flex items-center mt-10 justify-between'>
