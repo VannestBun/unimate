@@ -12,6 +12,7 @@ import { SERVER_URL } from "../constants/server";
 export default function FriendChat() {
     const [friends, setFriends] = useState([]);
     const [selectedFriend, setSelectedFriend] = useState([]);
+    const [selectedChatroom, setSelectedChatroom] = useState("");
     const [message, setMessage] = useState('');
     const [messagesList, setMessagesList] = useState([]);
 
@@ -52,7 +53,7 @@ export default function FriendChat() {
                 });
 
                 setFriends(friendList);
-                setSelectedFriend(friendList[0]);
+                handleSetChatroom(friendList[0])
             } catch (err) {
                 console.error("Error fetching all friends:", err);
             }
@@ -60,6 +61,34 @@ export default function FriendChat() {
 
         fetchMyFriends();
     }, []);
+
+    const handleSetChatroom = async (friend) => {
+        // Fetch chatroom based on user's email and friend's email
+        try {
+            const res = await fetch(`${SERVER_URL}/v1/chat/room`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    user_one_email: localStorage.getItem("user"),
+                    user_two_email: friend.student_email,
+                }),
+            });
+
+            if (!res.ok) {
+                throw new Error("Failed to fetch chatroom");
+            }
+
+            const chatroom = (await res.json()).data.chatroom;
+            
+            setSelectedFriend(friend);
+            setSelectedChatroom(chatroom);
+        } catch (err) {
+            console.error("Error fetching all users:", err);
+        }
+    };
+    
 
     return(
         <div className="flex flex-col h-screen">
@@ -93,8 +122,7 @@ export default function FriendChat() {
                             key={friend.id} 
                             className={`flex items-center p-4 cursor-pointer hover:bg-gray-200 ${selectedFriend.id === friend.id ? 'bg-gray-200' : ''}`}
                             onClick={() => {
-                                console.log("select friend", friend);
-                                setSelectedFriend(friend);
+                                handleSetChatroom(friend);
                             }}
                         >
                             <img src={index % 3  == 0 ? john : index % 3 == 1 ? james : peter} alt={friend.name} className="w-12 h-12 rounded-full mr-4" />
