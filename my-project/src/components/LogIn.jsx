@@ -17,7 +17,7 @@ export default function LogIn() {
 
                     <div className="w-1/2 space-y-6">
                         <h1 className="text-4xl font-bold text-gray-900 leading-tight">
-                            Start Your Unforgettable First Year with UniMate.
+                            Start Your <strong className='text-indigo-600 '>Unforgettable</strong> First Year with UniMate.
                         </h1>
                         <p className="text-xl text-gray-600">
                             Connect with peers, discover exciting events, and embrace all that campus life has to offer. 
