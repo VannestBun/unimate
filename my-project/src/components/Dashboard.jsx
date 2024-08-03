@@ -18,10 +18,11 @@ import DashboardCard from './DashboardCard';
 import Slider from 'react-slick';
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import ScrollableNav from './ScrollableNav';
 
 function SearchInput() {
     return (
-        <div className="flex items-center rounded-full px-4 py-2 bg-gray-100 ">
+        <div className="flex items-center rounded-full px-4 py-2 bg-gray-100">
             <Search size={20} className="text-gray-700 mr-2" />
             <input
                 type="text"
@@ -52,7 +53,7 @@ export default function Dashboard() {
                 }
             },
             {
-                breakpoint: 600,
+                breakpoint: 768,
                 settings: {
                     slidesToShow: 1,
                     slidesToScroll: 1
@@ -111,26 +112,32 @@ export default function Dashboard() {
                 <SearchInput />
             </div>
 
-            <div className="p-10">
+            <div className="p-4 md:p-10">
                 <Slider {...settings} ref={sliderRef}>
-                    <DashboardCard
-                        profilePic={john}
-                        backgroundImage={tagAnime}
-                        name="John Doe"
-                        description="I like food"
-                    />
-                    <DashboardCard
-                        profilePic={james}
-                        backgroundImage={tagFootball}
-                        name="John Doe"
-                        description="I like food"
-                    />
-                    <DashboardCard
-                        profilePic={peter}
-                        backgroundImage={tagArchitecture}
-                        name="John Doe"
-                        description="I like food"
-                    />
+                    <div className="px-2">
+                        <DashboardCard
+                            profilePic={john}
+                            backgroundImage={tagAnime}
+                            name="John Doe"
+                            description="I like food"
+                        />
+                    </div>
+                    <div className="px-2">
+                        <DashboardCard
+                            profilePic={james}
+                            backgroundImage={tagFootball}
+                            name="John Doe"
+                            description="I like food"
+                        />
+                    </div>
+                    <div className="px-2">
+                        <DashboardCard
+                            profilePic={peter}
+                            backgroundImage={tagArchitecture}
+                            name="John Doe"
+                            description="I like food"
+                        />
+                    </div>
                 </Slider>
 
                 <div className='flex items-center mt-10 justify-between'>
@@ -138,32 +145,36 @@ export default function Dashboard() {
                         <h1 className="text-5xl font-semibold mr-2">Upcoming Events for you</h1>
                         <img src={sparkle} alt="sparkle" className="w-10 h-auto" />
                     </div>
-                <div>
-                        <Link to="/allEvents" className='bg-indigo-600 text-white py-4 px-8 rounded-full'>See All</Link>
-                    </div>
+                    <Link to="/allEvents" className='bg-indigo-600 text-white py-4 px-8 rounded-full'>See All</Link>
                 </div>
-                <div className='flex gap-3 mt-8'>
-                <DashboardCard
-                        profilePic={peter}
-                        backgroundImage={movie}
-                        name="John Doe"
-                        description="I like food"
-                    />
-                <DashboardCard
-                        profilePic={peter}
-                        backgroundImage={founderHack}
-                        name="John Doe"
-                        description="I like food"
-                    />
-                <DashboardCard
-                        profilePic={peter}
-                        backgroundImage={orchestra}
-                        name="John Doe"
-                        description="I like food"
-                    />
-                </div>
-            </div>
 
+                <div className='flex gap-3 mt-8 justify-center'>
+                <DashboardCard
+                    profilePic={john}
+                    backgroundImage={movie}
+                    name="Movie Night"
+                    description="Join us for a night of fun and entertainment."
+                    link="/eventDetail"
+                    buttonContent="🎥 Join Movie Night"
+                />
+                <DashboardCard
+                    profilePic={james}
+                    backgroundImage={founderHack}
+                    name="Founders Hackathon"
+                    description="Collaborate and innovate with fellow founders."
+                    link="/eventDetail"
+                    buttonContent="💡 Join Hackathon"
+                />
+                <DashboardCard
+                    profilePic={peter}
+                    backgroundImage={orchestra}
+                    name="Orchestra"
+                    description="Experience the best classical orchestra."
+                    link="/eventDetail"
+                    buttonContent="Join Orchestra"
+                />
+            </div>
+            </div>
         </>
     );
 }

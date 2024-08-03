@@ -47,7 +47,7 @@ export default function AllEvents() {
             </div>
             <ScrollableNav />
 
-            <div className='flex gap-3 mt-8 justify-center'>
+            <div className='flex gap-3 mt-8 justify-center mx-8'>
                 <DashboardCard
                     profilePic={john}
                     backgroundImage={movie}
@@ -67,12 +67,13 @@ export default function AllEvents() {
                 <DashboardCard
                     profilePic={peter}
                     backgroundImage={orchestra}
-                    name="Orchestra Performance"
-                    description="Experience the magic of live orchestra."
+                    name="Orchestra"
+                    description="Experience orchestra."
                     link="/eventDetail"
-                    buttonContent={<img src={john} alt="Button Image" className="w-6 h-6" />}
+                    buttonContent="Join Orchestra"
                 />
             </div>
         </>
     );
 }
+
