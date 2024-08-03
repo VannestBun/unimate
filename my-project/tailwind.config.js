@@ -5,8 +5,14 @@ export default {
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        sans: ['Manrope', 'sans-serif'], 
+      },
+      colors: {
+        purpleMain: '#5532EB',  
+      },
+    },
   },
   plugins: [],
 }
-

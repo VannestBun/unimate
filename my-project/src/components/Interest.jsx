@@ -18,7 +18,7 @@ function InterestTag({ text, onRemove }) {
 function InterestCard({ text, onClick, showIcon = true }) {
     return (
         <div 
-            className="inline-flex items-center bg-gray-500 text-gray-100 rounded-full px-3 py-1 cursor-pointer hover:bg-indigo-800 transition-colors duration-200 m-1"
+            className="inline-flex items-center bg-gray-200 text-black rounded-full px-3 py-1 cursor-pointer hover:bg-purpleMain hover:text-white transition-colors duration-200 m-1"
             onClick={() => onClick(text)}
         >
             {showIcon && <Plus size={16} className="mr-1" />}
@@ -65,13 +65,13 @@ export default function Interest() {
 
     return (
         <>
-            <div className="container mx-auto px-4 py-8">
-                <div className="flex mb-28">
-                    <img src={unimateLogo} alt="Unimate Logo" className="w-40 h-auto" />
+            <div className=" mx-2">
+                <div className="flex mb-20">
+                    <img src={unimateLogo} alt="Unimate Logo" className="w-32 h-auto" />
                 </div>
 
-                <div className="text-center mb-8">
-                    <h1 className="text-8xl font-extrabold">What are you interested in?</h1>
+                <div className=" text-center mb-8">
+                    <h1 className="main-heading text-8xl font-extrabold">What are you interested in?</h1>
                 </div>
 
                 <form onSubmit={handleSearch} className="w-full max-w-4xl mx-auto mb-8">
@@ -97,7 +97,7 @@ export default function Interest() {
                     </div>
                 </form>
 
-                <div className="text-center w-1/2 mx-auto mt-20">
+                <div className="text-center w-3/4 mx-auto mt-16">
                     {availableInterests.filter(interest => !selectedInterests.includes(interest)).map((interest, index) => (
                         <InterestCard key={index} text={interest} onClick={handleInterestClick} />
                     ))}
@@ -110,7 +110,7 @@ export default function Interest() {
                     )}
                 </div>
 
-                <div className='flex justify-between items-center mt-20'>
+                <div className='flex justify-between items-center mt-16'>
                     <div 
                         className="inline-flex items-center bg-indigo-600 text-white rounded-full px-14 py-3 cursor-pointer hover:bg-indigo-800 transition-colors duration-200 m-1 mr-5"
                     >
