@@ -77,14 +77,6 @@ export default function Interest() {
     
             // Call API
             console.log('Sending request to:', `${SERVER_URL}/v1/account/register`);
-            console.log('Request body:', {
-                student_email: email,
-                interests: selectedInterests,
-                name: name,
-                major: "Computer Science",
-                cohort_year: 2022,
-                graduation_year: 2026,
-            });
 
             const res = await fetch(`${SERVER_URL}/v1/account/register`, {
                 method: "POST",

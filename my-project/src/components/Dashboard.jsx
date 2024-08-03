@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import unimateLogo from '../assets/Unimate.png';
 import tagAnime from '../assets/tagAnime.png';
 import tagArchitecture from '../assets/tagArchitecture.png';
@@ -19,6 +19,7 @@ import Slider from 'react-slick';
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import ScrollableNav from './ScrollableNav';
+import { SERVER_URL } from '../constants/server';
 
 function SearchInput() {
     return (
@@ -35,6 +36,29 @@ function SearchInput() {
 
 export default function Dashboard() {
     const sliderRef = useRef(null);
+    const [usersList, setUsersList] = useState([]);
+
+    useEffect(() => {
+        const fetchUsers = async () => {
+          try {
+            const res = await fetch(`${SERVER_URL}/v1/account/allusers`, {
+              method: "GET",
+            });
+      
+            if (!res.ok) {
+              throw new Error("Failed to fetch users");
+            }
+      
+            const data = (await res.json()).data;
+            setUsersList(data.users);
+            console.log(data.users);
+          } catch (err) {
+            console.error("Error fetching all users:", err);
+          }
+        };
+      
+        fetchUsers();
+      }, []);
 
     const settings = {
         dots: true,
@@ -106,7 +130,9 @@ export default function Dashboard() {
 
             <div className='flex justify-between mx-10 mt-10 items-center'>
                 <div className='flex items-center'>
-                    <h1 className="text-5xl font-semibold mr-2">Friends for you</h1>
+                    <h1 className="text-5xl font-semibold mr-2">
+                        Friends for you
+                    </h1>
                     <img src={sparkle} alt="sparkle" className="w-10 h-auto" />
                 </div>
                 <SearchInput />
@@ -114,13 +140,32 @@ export default function Dashboard() {
 
             <div className="p-4 md:p-10">
                 <Slider {...settings} ref={sliderRef}>
+                    {usersList.length > 0 ? (
+                        usersList.map((user, index) => (
+                            <div
+                                key={index}
+                                className='px-2'
+                            >
+                                <DashboardCard
+                                    profilePic={
+                                        index % 3 == 0 ? john : 
+                                        index % 3 == 1 ? james : peter
+                                }
+                                    backgroundImage={
+                                        index % 3 == 0 ? tagAnime : 
+                                        index % 3 == 1 ? tagFootball : tagArchitecture
+                                    }
+                                    name={user.name}
+                                    description={`Majoring in  ${user.major}. Loves ${user.interests}`}
+                                />
+                            </div>
+                        ))
+                    ) : (
+                        <>
+                        </>
+                    )}
                     <div className="px-2">
-                        <DashboardCard
-                            profilePic={john}
-                            backgroundImage={tagAnime}
-                            name="John Doe"
-                            description="I like food"
-                        />
+                        
                     </div>
                     <div className="px-2">
                         <DashboardCard
