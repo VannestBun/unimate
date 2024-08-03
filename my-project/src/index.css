@@ -16,7 +16,14 @@ body {
 }
 
 .text-base{
-  font-size: 1.5vw; 
+  font-size: 1.4vw; 
+  font-family: 'Manrope';
+  letter-spacing: -0.03em;
+  font-weight: 300;
+}
+
+.text-body{
+  font-size: 1.2vw; 
   font-family: 'Manrope';
   letter-spacing: -0.03em;
   font-weight: 300;

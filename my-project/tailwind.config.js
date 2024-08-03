@@ -12,6 +12,9 @@ export default {
       colors: {
         purpleMain: '#5532EB',  
       },
+      width: {
+        '96': '96%',
+      },
     },
   },
   plugins: [],
