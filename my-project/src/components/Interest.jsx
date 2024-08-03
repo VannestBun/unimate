@@ -95,14 +95,16 @@ export default function Interest() {
     
             if (res.ok) {
                 console.log('API call successful');
+
+                // Store email to cache
+                localStorage.setItem("user", JSON.stringify(email));
+
                 navigate("/dashboard");
             } else {
                 console.error('API call failed:', await res.text());
-                // Handle error (e.g., show an error message to the user)
             }
         } catch (error) {
             console.error('Error in handleLetsGoNext:', error);
-            // Handle error (e.g., show an error message to the user)
         }
     };
 

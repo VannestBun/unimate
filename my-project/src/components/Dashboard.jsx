@@ -207,7 +207,7 @@ export default function Dashboard() {
                                     }
                                         backgroundImage={
                                             index % 3 == 0 ? movie : 
-                                            index % 3 == 1 ? founderHack : orchestra
+                                            index % 3 == 1 ? orchestra : founderHack
                                         }
                                         name={event.name}
                                         description={`${event.description}`}
