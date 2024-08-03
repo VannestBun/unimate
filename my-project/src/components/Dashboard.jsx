@@ -105,7 +105,7 @@ export default function Dashboard() {
 
             <div className='flex justify-between mx-10 mt-10 items-center'>
                 <div className='flex items-center'>
-                    <h1 className="text-5xl font-semibold mr-2">Friends for you</h1>
+                    <h1 className="text-5xl font-semibold mr-2 tracking-tighter">Friends for you</h1>
                     <img src={sparkle} alt="sparkle" className="w-10 h-auto" />
                 </div>
                 <SearchInput />
@@ -133,9 +133,9 @@ export default function Dashboard() {
                     />
                 </Slider>
 
-                <div className='flex items-center mt-10 justify-between'>
+                <div className='flex items-center mt-20 justify-between'>
                     <div className='flex items-center'>
-                        <h1 className="text-5xl font-semibold mr-2">Upcoming Events for you</h1>
+                        <h1 className="text-5xl font-semibold mr-2 tracking-tighter">Upcoming Events for you</h1>
                         <img src={sparkle} alt="sparkle" className="w-10 h-auto" />
                     </div>
                 <div>
