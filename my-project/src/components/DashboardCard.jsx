@@ -10,7 +10,7 @@ function DashboardCard({ backgroundImage, profilePic, name, description, onSayHe
         } else if (typeof buttonContent === 'object' && buttonContent !== null && buttonContent.type) {
             return React.cloneElement(buttonContent);
         } else {
-            return '👋🏼 Say Hello';
+            return '👋🏼 Say Hi';
         }
     };
 
@@ -35,7 +35,7 @@ function DashboardCard({ backgroundImage, profilePic, name, description, onSayHe
                 </div>
                 <div className="self-end mt-2">
                     <button
-                        className="bg-indigo-600 hover:bg-indigo-800 text-white text-xs sm:text-sm font-bold py-1 px-3 sm:py-2 sm:px-4 rounded-full transition duration-300 ease-in-out transform hover:scale-105"
+                        className="min-w-[100px] bg-indigo-600 hover:bg-indigo-800 text-white text-xs sm:text-sm font-bold py-1 px-3 sm:py-2 sm:px-4 rounded-full transition duration-300 ease-in-out transform hover:scale-105"
                         onClick={onSayHello}
                     >
                         {renderButtonContent()}

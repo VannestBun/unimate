@@ -77,14 +77,6 @@ export default function Interest() {
     
             // Call API
             console.log('Sending request to:', `${SERVER_URL}/v1/account/register`);
-            console.log('Request body:', {
-                student_email: email,
-                interests: selectedInterests,
-                name: name,
-                major: "Computer Science",
-                cohort_year: 2022,
-                graduation_year: 2026,
-            });
 
             const res = await fetch(`${SERVER_URL}/v1/account/register`, {
                 method: "POST",
@@ -100,17 +92,19 @@ export default function Interest() {
                     graduation_year: 2026,
                 })
             });
-    
-            if (res.ok) {
-                console.log('API call successful');
-                navigate("/dashboard");
-            } else {
+
+            if (!res.ok) {
                 console.error('API call failed:', await res.text());
-                // Handle error (e.g., show an error message to the user)
-            }
+            } 
+            // Store email to cache
+            const data = (await res.json()).data;
+
+            localStorage.setItem("user", email);
+            localStorage.setItem("user_id", data.user_id);
+
+            navigate("/dashboard");
         } catch (error) {
             console.error('Error in handleLetsGoNext:', error);
-            // Handle error (e.g., show an error message to the user)
         }
     };
 
@@ -169,7 +163,17 @@ export default function Interest() {
 
                 <div 
                     className="inline-flex items-center bg-indigo-600 text-white rounded-full px-8 py-3 cursor-pointer hover:bg-indigo-800 transition-colors duration-200 m-1 ml-5"
-                    onClick={handleLetsGoNext}
+                    onClick={() => {
+                        if (email == "jane@student.unimelb.edu") {
+                            // Login with default user
+                            localStorage.setItem("user", email);
+                            localStorage.setItem("user_id", "b29d1bd2-a4d9-43b6-b7d2-dac1a17e979a");
+
+                            navigate("/dashboard");
+                        } else {
+                            handleLetsGoNext();
+                        }
+                    }}
                 >
                     Let's Get Started →
                 </div>

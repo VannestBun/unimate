@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import unimateLogo from '../assets/Unimate.png';
 import tagAnime from '../assets/tagAnime.png';
 import tagArchitecture from '../assets/tagArchitecture.png';
@@ -19,6 +19,7 @@ import Slider from 'react-slick';
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import ScrollableNav from './ScrollableNav';
+import { SERVER_URL } from '../constants/server';
 
 function SearchInput() {
     return (
@@ -35,6 +36,48 @@ function SearchInput() {
 
 export default function Dashboard() {
     const sliderRef = useRef(null);
+    const [usersList, setUsersList] = useState([]);
+    const [eventsList, setEventsList] = useState([]);
+
+    useEffect(() => {
+        const fetchUsers = async () => {
+          try {
+            const res = await fetch(`${SERVER_URL}/v1/account/allusers`, {
+              method: "GET",
+            });
+      
+            if (!res.ok) {
+              throw new Error("Failed to fetch users");
+            }
+      
+            const users = (await res.json()).data.users;
+            setUsersList(users);
+          } catch (err) {
+            console.error("Error fetching all users:", err);
+          }
+        };
+
+        const fetchAllEvents = async () => {
+            try {
+                const response = await fetch(`${SERVER_URL}/v1/event`, {
+                    method: 'GET',
+                });
+        
+                if (!response.ok) {
+                    throw new Error('Failed to fetch events');
+                }
+        
+                const events = (await response.json()).data.events;
+                setEventsList(events)
+            } catch (error) {
+                console.error('Error fetching events:', error);
+                return [];
+            }
+        };
+      
+        fetchUsers();
+        fetchAllEvents();
+      }, []);
 
     const settings = {
         dots: true,
@@ -106,7 +149,9 @@ export default function Dashboard() {
 
             <div className='flex justify-between mx-10 mt-10 items-center'>
                 <div className='flex items-center'>
-                    <h1 className="text-5xl font-semibold mr-2">Friends for you</h1>
+                    <h1 className="text-5xl font-semibold mr-2">
+                        Friends for you
+                    </h1>
                     <img src={sparkle} alt="sparkle" className="w-10 h-auto" />
                 </div>
                 <SearchInput />
@@ -114,30 +159,30 @@ export default function Dashboard() {
 
             <div className="p-4 md:p-10">
                 <Slider {...settings} ref={sliderRef}>
-                    <div className="px-2">
-                        <DashboardCard
-                            profilePic={john}
-                            backgroundImage={tagAnime}
-                            name="John Doe"
-                            description="I like food"
-                        />
-                    </div>
-                    <div className="px-2">
-                        <DashboardCard
-                            profilePic={james}
-                            backgroundImage={tagFootball}
-                            name="John Doe"
-                            description="I like food"
-                        />
-                    </div>
-                    <div className="px-2">
-                        <DashboardCard
-                            profilePic={peter}
-                            backgroundImage={tagArchitecture}
-                            name="John Doe"
-                            description="I like food"
-                        />
-                    </div>
+                    {usersList.length > 0 ? (
+                        usersList.map((user, index) => (
+                            <div
+                                key={index}
+                                className='px-2'
+                            >
+                                <DashboardCard
+                                    profilePic={
+                                        index % 3 == 0 ? john : 
+                                        index % 3 == 1 ? james : peter
+                                }
+                                    backgroundImage={
+                                        index % 3 == 0 ? tagAnime : 
+                                        index % 3 == 1 ? tagFootball : tagArchitecture
+                                    }
+                                    name={user.name}
+                                    description={`Majoring in  ${user.major}. Loves ${user.interests}`}
+                                />
+                            </div>
+                        ))
+                    ) : (
+                        <>
+                        </>
+                    )}
                 </Slider>
 
                 <div className='flex items-center mt-10 justify-between'>
@@ -149,31 +194,33 @@ export default function Dashboard() {
                 </div>
 
                 <div className='flex gap-3 mt-8 justify-center'>
-                <DashboardCard
-                    profilePic={john}
-                    backgroundImage={movie}
-                    name="Movie Night"
-                    description="Join us for a night of fun and entertainment."
-                    link="/eventDetail"
-                    buttonContent="🎥 Join Movie Night"
-                />
-                <DashboardCard
-                    profilePic={james}
-                    backgroundImage={founderHack}
-                    name="Founders Hackathon"
-                    description="Collaborate and innovate with fellow founders."
-                    link="/eventDetail"
-                    buttonContent="💡 Join Hackathon"
-                />
-                <DashboardCard
-                    profilePic={peter}
-                    backgroundImage={orchestra}
-                    name="Orchestra"
-                    description="Experience the best classical orchestra."
-                    link="/eventDetail"
-                    buttonContent="Join Orchestra"
-                />
-            </div>
+                    {eventsList.length > 0 ? (
+                            eventsList.map((event, index) => (
+                                <div
+                                    key={index}
+                                    className='px-2'
+                                >
+                                    <DashboardCard
+                                        profilePic={
+                                            index % 3 == 0 ? john : 
+                                            index % 3 == 1 ? james : peter
+                                    }
+                                        backgroundImage={
+                                            index % 3 == 0 ? movie : 
+                                            index % 3 == 1 ? orchestra : founderHack
+                                        }
+                                        name={event.name}
+                                        description={`${event.description}`}
+                                        link="/eventDetail"
+                                        buttonContent="Join"
+                                    />
+                                </div>
+                            ))
+                        ) : (
+                            <>
+                            </>
+                        )}
+                </div>
             </div>
         </>
     );

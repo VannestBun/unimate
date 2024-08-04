@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import unimateLogo from '../assets/Unimate.png';
 import menu from '../assets/Menu.png';
 import guy from '../assets/guy.png';
@@ -7,23 +7,146 @@ import james from '../assets/james.png';
 import peter from '../assets/peter.png';
 import { Link } from 'react-router-dom';
 import { Search, Send } from 'lucide-react';
-
-const friends = [
-  { id: 1, name: 'John Doe', avatar: john, lastMessage: 'Hey, how are you?' },
-  { id: 2, name: 'James Smith', avatar: james, lastMessage: 'Are you coming to the event?' },
-  { id: 3, name: 'Peter Parker', avatar: peter, lastMessage: 'Thanks for your help!' },
-];
+import { SERVER_URL } from "../constants/server";
 
 export default function FriendChat() {
-    const [selectedFriend, setSelectedFriend] = useState(friends[0]);
+    const currentUserID = localStorage.getItem("user_id");
+    const [friends, setFriends] = useState([]);
+    const [selectedFriend, setSelectedFriend] = useState([]);
+    const [selectedChatroom, setSelectedChatroom] = useState("");
     const [message, setMessage] = useState('');
+    const [messagesList, setMessagesList] = useState([]);
 
-    const handleSendMessage = (e) => {
-        e.preventDefault();
-        // Here you would typically send the message to your backend
-        console.log('Sending message:', message);
-        setMessage('');
+    // const handleSendMessage = (e) => {
+    //     e.preventDefault();
+    //     // Here you would typically send the message to your backend
+    //     console.log('Sending message:', message);
+        
+    //     setMessagesList(prev => [...prev, message]);
+        
+    //     setMessage('');
+    // };
+
+    const handleSendMessage = async (e) => {
+        try {
+            e.preventDefault();
+
+            const payload = {
+                chatroom_id: selectedChatroom.id,
+                message: message,
+            };
+
+            console.log("Sending message\n", payload);
+
+            const res = await fetch(`${SERVER_URL}/v1/chat/send`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-Current-User": localStorage.getItem("user"),
+                },
+                body: JSON.stringify(payload),
+            });
+
+            if (!res.ok) {
+                throw new Error("Failed to send chat message");
+            }
+            
+            let chatMessage = (await res.json()).data.message;
+
+            console.log("chat sent:", chatMessage);
+            setMessagesList(prev => [...prev, chatMessage]);
+
+            setMessage('');
+        } catch (err) {
+            console.error("Error fetching all friends:", err);
+        }
     };
+
+    useEffect(() => {
+        // Fetching friends
+        const fetchMyFriends = async () => {
+            try {
+                const res = await fetch(`${SERVER_URL}/v1/friend`, {
+                    method: "GET",
+                    headers: {
+                        "X-Current-User": localStorage.getItem("user"),
+                    },
+                });
+                
+                if (!res.ok) {
+                    throw new Error("Failed to fetch friends");
+                }
+
+                let friendList = (await res.json()).data.friends;
+
+                friendList = friendList.map((friend, index) => {
+                    return {
+                        ...friend,
+                        avatar: index % 3  == 0 ? john : index % 3 == 1 ? james : peter,
+                        // Change UI for last message -> friend's email
+                        lastMessage: friend.student_email,
+                    }
+                });
+
+                setFriends(friendList);
+                await handleSetChatroom(friendList[0])
+            } catch (err) {
+                console.error("Error fetching all friends:", err);
+            }
+        };
+
+        fetchMyFriends();
+    }, []);
+
+    const handleSetChatroom = async (friend) => {
+        // Fetch chatroom based on user's email and friend's email
+        try {
+            const res = await fetch(`${SERVER_URL}/v1/chat/room`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    user_one_email: localStorage.getItem("user"),
+                    user_two_email: friend.student_email,
+                }),
+            });
+
+            if (!res.ok) {
+                throw new Error("Failed to fetch chatroom");
+            }
+
+            const chatroom = (await res.json()).data.chatroom;
+
+            // Fetching past chats in this room
+            const fetchChatroomMessages = async () => {
+                const res = await fetch(`${SERVER_URL}/v1/chat/room-messages`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        chatroom_id: chatroom.id,
+                    }),
+                });
+
+                if (!res.ok) {
+                    throw new Error("Failed to fetch room messages");
+                }
+
+                const roomMessages = (await res.json()).data.messages;
+                setMessagesList(roomMessages);
+            };
+
+            await fetchChatroomMessages();
+            
+            setSelectedFriend(friend);
+            setSelectedChatroom(chatroom);
+        } catch (err) {
+            console.error("Error fetching all users:", err);
+        }
+    };
+    
 
     return(
         <div className="flex flex-col h-screen">
@@ -52,13 +175,15 @@ export default function FriendChat() {
             <div className="flex flex-1 overflow-hidden">
                 {/* Friends List */}
                 <div className="w-1/4 bg-gray-100 overflow-y-auto">
-                    {friends.map((friend) => (
+                    {friends.map((friend, index) => (
                         <div 
                             key={friend.id} 
                             className={`flex items-center p-4 cursor-pointer hover:bg-gray-200 ${selectedFriend.id === friend.id ? 'bg-gray-200' : ''}`}
-                            onClick={() => setSelectedFriend(friend)}
+                            onClick={() => {
+                                handleSetChatroom(friend);
+                            }}
                         >
-                            <img src={friend.avatar} alt={friend.name} className="w-12 h-12 rounded-full mr-4" />
+                            <img src={index % 3  == 0 ? john : index % 3 == 1 ? james : peter} alt={friend.name} className="w-12 h-12 rounded-full mr-4" />
                             <div>
                                 <h3 className="font-semibold">{friend.name}</h3>
                                 <p className="text-sm text-gray-600 truncate">{friend.lastMessage}</p>
@@ -71,19 +196,31 @@ export default function FriendChat() {
                 <div className="flex-1 flex flex-col bg-white">
                     {/* Chat Header */}
                     <div className="flex items-center p-4 border-b">
-                        <img src={selectedFriend.avatar} alt={selectedFriend.name} className="w-10 h-10 rounded-full mr-4" />
+                        <img src={john} alt={selectedFriend.name} className="w-10 h-10 rounded-full mr-4" />
                         <h2 className="font-semibold">{selectedFriend.name}</h2>
                     </div>
 
                     {/* Messages */}
                     <div className="flex-1 overflow-y-auto p-4">
-                        {/* You would map through actual messages here */}
-                        <div className="mb-4">
-                            <p className="bg-gray-200 rounded-lg p-2 inline-block">Hey, how are you?</p>
-                        </div>
-                        <div className="mb-4 text-right">
-                            <p className="bg-indigo-500 text-white rounded-lg p-2 inline-block">I'm good, thanks! How about you?</p>
-                        </div>
+                        {messagesList.length > 0 ? (
+                            messagesList.map((messageObj, index) => {
+                                return (
+                                    <div
+                                        key={index}
+                                        className={`mb-4 ${currentUserID == messageObj.sender_id ? 'text-right' : 'text-left'}`}
+                                    >
+                                        <p 
+                                            className={`${currentUserID == messageObj.sender_id ? "bg-indigo-500 text-white rounded-lg p-2 inline-block" : "bg-gray-200 rounded-lg p-2 inline-block"}`}
+                                        >
+                                            {messageObj.message}
+                                        </p>
+                                    </div>
+                                )
+                            })
+                        ) : (
+                            <>
+                            </>
+                        )}
                     </div>
 
                     {/* Message Input */}
