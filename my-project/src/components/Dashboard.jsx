@@ -12,7 +12,7 @@ import peter from '../assets/peter.png';
 import movie from '../assets/eventMovie.png';
 import founderHack from '../assets/eventFoundersHack.png';
 import orchestra from '../assets/eventOrchestra.png';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Search } from 'lucide-react';
 import DashboardCard from './DashboardCard';
 import Slider from 'react-slick';
@@ -35,6 +35,10 @@ function SearchInput() {
 }
 
 export default function Dashboard() {
+    const navigate = useNavigate();
+    const currentUserEmail = localStorage.getItem("user");
+    const currentUserID = localStorage.getItem("user_id");
+    
     const sliderRef = useRef(null);
     const [usersList, setUsersList] = useState([]);
     const [eventsList, setEventsList] = useState([]);
@@ -71,7 +75,6 @@ export default function Dashboard() {
                 setEventsList(events)
             } catch (error) {
                 console.error('Error fetching events:', error);
-                return [];
             }
         };
       
@@ -114,6 +117,70 @@ export default function Dashboard() {
                 sliderRef.current.slickPrev();
             }
         }
+    };
+
+    const handleAddFriend = async (my_uuid, friend_uuid) => {
+        try {
+            const res = await fetch(`${SERVER_URL}/v1/friend`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    friend_one: my_uuid,
+                    friend_two: friend_uuid,
+                }),
+            });
+
+            if (!res.ok) {
+                console.error("API call failed", await res.text());
+            }
+
+            const friend_conn = (await res.json()).data;
+            
+            console.log("Successfully added friend\n", friend_conn);
+
+            return friend_conn;
+        } catch (err) {
+            console.error('Error adding friend:', error);
+        }
+    };
+
+    const handleCreateChatroom = async (friend_uuid) => {
+        try {
+            const res = await fetch(`${SERVER_URL}/v1/chat/`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-Current-User": currentUserEmail,
+                },
+                body: JSON.stringify({
+                    friend_id: friend_uuid,
+                }),
+            });
+
+            if (!res.ok) {
+                throw new Error("Failed to create chatroom");
+            }
+
+            const chatroom = (await res.json()).data.chatroom;
+
+            console.log(chatroom);
+            
+            return chatroom;
+        } catch (err) {
+            console.error('Error adding friend:', error);
+        }
+    };
+
+    const handleSayHi = async (friend) => {
+        try {
+            await handleAddFriend(currentUserID, friend.id);
+            await handleCreateChatroom(friend.id);
+            navigate("/friendChat");
+        } catch (err) {
+            console.error('Error adding friend:', error);
+        }        
     };
 
     useEffect(() => {
@@ -160,12 +227,15 @@ export default function Dashboard() {
             <div className="p-4 md:p-10">
                 <Slider {...settings} ref={sliderRef}>
                     {usersList.length > 0 ? (
-                        usersList.map((user, index) => (
+                        usersList.map((friend, index) => (
                             <div
                                 key={index}
                                 className='px-2'
                             >
                                 <DashboardCard
+                                    onSayHello={() => {
+                                        handleSayHi(friend)
+                                    }}
                                     profilePic={
                                         index % 3 == 0 ? john : 
                                         index % 3 == 1 ? james : peter
@@ -174,8 +244,8 @@ export default function Dashboard() {
                                         index % 3 == 0 ? tagAnime : 
                                         index % 3 == 1 ? tagFootball : tagArchitecture
                                     }
-                                    name={user.name}
-                                    description={`Majoring in  ${user.major}. Loves ${user.interests}`}
+                                    name={friend.name}
+                                    description={`Majoring in  ${friend.major}. Loves ${friend.interests}`}
                                 />
                             </div>
                         ))
