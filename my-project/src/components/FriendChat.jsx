@@ -10,20 +10,56 @@ import { Search, Send } from 'lucide-react';
 import { SERVER_URL } from "../constants/server";
 
 export default function FriendChat() {
+    const currentUserID = localStorage.getItem("user_id");
     const [friends, setFriends] = useState([]);
     const [selectedFriend, setSelectedFriend] = useState([]);
     const [selectedChatroom, setSelectedChatroom] = useState("");
     const [message, setMessage] = useState('');
     const [messagesList, setMessagesList] = useState([]);
 
-    const handleSendMessage = (e) => {
-        e.preventDefault();
-        // Here you would typically send the message to your backend
-        console.log('Sending message:', message);
+    // const handleSendMessage = (e) => {
+    //     e.preventDefault();
+    //     // Here you would typically send the message to your backend
+    //     console.log('Sending message:', message);
         
-        setMessagesList(prev => [...prev, message]);
+    //     setMessagesList(prev => [...prev, message]);
         
-        setMessage('');
+    //     setMessage('');
+    // };
+
+    const handleSendMessage = async (e) => {
+        try {
+            e.preventDefault();
+
+            const payload = {
+                chatroom_id: selectedChatroom.id,
+                message: message,
+            };
+
+            console.log("Sending message\n", payload);
+
+            const res = await fetch(`${SERVER_URL}/v1/chat/send`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-Current-User": localStorage.getItem("user"),
+                },
+                body: JSON.stringify(payload),
+            });
+
+            if (!res.ok) {
+                throw new Error("Failed to send chat message");
+            }
+            
+            let chatMessage = (await res.json()).data.message;
+
+            console.log("chat sent:", chatMessage);
+            setMessagesList(prev => [...prev, chatMessage]);
+
+            setMessage('');
+        } catch (err) {
+            console.error("Error fetching all friends:", err);
+        }
     };
 
     useEffect(() => {
@@ -53,7 +89,7 @@ export default function FriendChat() {
                 });
 
                 setFriends(friendList);
-                handleSetChatroom(friendList[0])
+                await handleSetChatroom(friendList[0])
             } catch (err) {
                 console.error("Error fetching all friends:", err);
             }
@@ -81,6 +117,28 @@ export default function FriendChat() {
             }
 
             const chatroom = (await res.json()).data.chatroom;
+
+            // Fetching past chats in this room
+            const fetchChatroomMessages = async () => {
+                const res = await fetch(`${SERVER_URL}/v1/chat/room-messages`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        chatroom_id: chatroom.id,
+                    }),
+                });
+
+                if (!res.ok) {
+                    throw new Error("Failed to fetch room messages");
+                }
+
+                const roomMessages = (await res.json()).data.messages;
+                setMessagesList(roomMessages);
+            };
+
+            await fetchChatroomMessages();
             
             setSelectedFriend(friend);
             setSelectedChatroom(chatroom);
@@ -144,26 +202,21 @@ export default function FriendChat() {
 
                     {/* Messages */}
                     <div className="flex-1 overflow-y-auto p-4">
-                        {/* You would map through actual messages here */}
-                        <div className="mb-4">
-                            <p className="bg-gray-200 rounded-lg p-2 inline-block">Hey, how are you?</p>
-                        </div>
-                        <div className="mb-4 text-right">
-                            <p className="bg-indigo-500 text-white rounded-lg p-2 inline-block">I'm good, thanks! How about you?</p>
-                        </div>
                         {messagesList.length > 0 ? (
-                            messagesList.map((message, index) => (
-                                <div
-                                    key={index}
-                                    className={`mb-4 ${index % 2 == 0 ? 'text-left' : 'text-right'}`}
-                                >
-                                    <p 
-                                        className={`${index % 2 == 0 ? "bg-gray-200 rounded-lg p-2 inline-block" : "bg-indigo-500 text-white rounded-lg p-2 inline-block"}`}
+                            messagesList.map((messageObj, index) => {
+                                return (
+                                    <div
+                                        key={index}
+                                        className={`mb-4 ${currentUserID == messageObj.sender_id ? 'text-right' : 'text-left'}`}
                                     >
-                                        {message}
-                                    </p>
-                                </div>
-                            ))
+                                        <p 
+                                            className={`${currentUserID == messageObj.sender_id ? "bg-indigo-500 text-white rounded-lg p-2 inline-block" : "bg-gray-200 rounded-lg p-2 inline-block"}`}
+                                        >
+                                            {messageObj.message}
+                                        </p>
+                                    </div>
+                                )
+                            })
                         ) : (
                             <>
                             </>

@@ -92,17 +92,17 @@ export default function Interest() {
                     graduation_year: 2026,
                 })
             });
-    
-            if (res.ok) {
-                console.log('API call successful');
 
-                // Store email to cache
-                localStorage.setItem("user", email);
-
-                navigate("/dashboard");
-            } else {
+            if (!res.ok) {
                 console.error('API call failed:', await res.text());
-            }
+            } 
+            // Store email to cache
+            const data = (await res.json()).data;
+
+            localStorage.setItem("user", email);
+            localStorage.setItem("user_id", data.user_id);
+
+            navigate("/dashboard");
         } catch (error) {
             console.error('Error in handleLetsGoNext:', error);
         }
@@ -167,6 +167,7 @@ export default function Interest() {
                         if (email == "jane@student.unimelb.edu") {
                             // Login with default user
                             localStorage.setItem("user", email);
+                            localStorage.setItem("user_id", "b29d1bd2-a4d9-43b6-b7d2-dac1a17e979a");
 
                             navigate("/dashboard");
                         } else {
