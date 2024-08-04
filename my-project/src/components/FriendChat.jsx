@@ -10,7 +10,10 @@ import { Search, Send } from 'lucide-react';
 import { SERVER_URL } from "../constants/server";
 
 export default function FriendChat() {
+    const currentUserEmail = localStorage.getItem("user");
     const currentUserID = localStorage.getItem("user_id");
+
+
     const [friends, setFriends] = useState([]);
     const [selectedFriend, setSelectedFriend] = useState([]);
     const [selectedChatroom, setSelectedChatroom] = useState("");
@@ -36,8 +39,6 @@ export default function FriendChat() {
                 message: message,
             };
 
-            console.log("Sending message\n", payload);
-
             const res = await fetch(`${SERVER_URL}/v1/chat/send`, {
                 method: "POST",
                 headers: {
@@ -53,7 +54,6 @@ export default function FriendChat() {
             
             let chatMessage = (await res.json()).data.message;
 
-            console.log("chat sent:", chatMessage);
             setMessagesList(prev => [...prev, chatMessage]);
 
             setMessage('');
@@ -69,7 +69,7 @@ export default function FriendChat() {
                 const res = await fetch(`${SERVER_URL}/v1/friend`, {
                     method: "GET",
                     headers: {
-                        "X-Current-User": localStorage.getItem("user"),
+                        "X-Current-User": currentUserEmail,
                     },
                 });
                 
@@ -79,6 +79,11 @@ export default function FriendChat() {
 
                 let friendList = (await res.json()).data.friends;
 
+                if (friendList.length == 0) {
+                    setFriends([]);
+                    return;
+                }
+
                 friendList = friendList.map((friend, index) => {
                     return {
                         ...friend,
@@ -86,7 +91,7 @@ export default function FriendChat() {
                         // Change UI for last message -> friend's email
                         lastMessage: friend.student_email,
                     }
-                });
+                }).reverse();
 
                 setFriends(friendList);
                 await handleSetChatroom(friendList[0])
@@ -107,7 +112,7 @@ export default function FriendChat() {
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify({
-                    user_one_email: localStorage.getItem("user"),
+                    user_one_email: currentUserEmail,
                     user_two_email: friend.student_email,
                 }),
             });
@@ -175,7 +180,7 @@ export default function FriendChat() {
             <div className="flex flex-1 overflow-hidden">
                 {/* Friends List */}
                 <div className="w-1/4 bg-gray-100 overflow-y-auto">
-                    {friends.map((friend, index) => (
+                    {friends.length > 0 && friends.map((friend, index) => (
                         <div 
                             key={friend.id} 
                             className={`flex items-center p-4 cursor-pointer hover:bg-gray-200 ${selectedFriend.id === friend.id ? 'bg-gray-200' : ''}`}
