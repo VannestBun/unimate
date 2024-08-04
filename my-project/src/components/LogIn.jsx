@@ -1,10 +1,24 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import unimateLogo from '../assets/Unimate.png';
 import ssoImage from '../assets/ssoLoginImagery.png';
 import mailIcon from '../assets/iconMail.png'
 
+import useAuthStore from "../context/authStore";
+
 export default function Login() {
+  const [emailState, setEmailState] = useState("");
+  
+  const setEmailContext = useAuthStore((state) => state.setEmail);
+  
+  const onEmailChange = (newEmail) => {
+    setEmailState(newEmail);
+  };
+
+  const onLetsGoSubmit = () => {
+    setEmailContext(emailState);
+  };
+
   return (
     <div className="h-screen flex flex-col mx-2 overflow-hidden">
       {/* Logo Section */}
@@ -41,9 +55,11 @@ export default function Login() {
                     type="email"
                     className="flex-grow bg-transparent text-gray-600 placeholder-gray-900 ml-3 focus:outline-none"
                     placeholder="johndoe@student.rmit.edu.au"
+                    value={emailState}
+                    onChange={(e) => onEmailChange(e.target.value)}
                 />
                 <Link to="/interest">
-                    <button className="ml-auto bg-indigo-600 text-white font-bold py-2 px-6 rounded-full">
+                    <button className="ml-auto bg-indigo-600 text-white font-bold py-2 px-6 rounded-full" onClick={onLetsGoSubmit}>
                     Let’s Go!
                     </button>
                 </Link>
